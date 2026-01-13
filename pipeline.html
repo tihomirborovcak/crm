@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline - Signal CRM</title>
+    <link rel="stylesheet" href="css/common.css?v=3">
+    <link rel="stylesheet" href="css/pipeline.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo">Signal <span>CRM</span></div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-btn">📊 Dashboard</a>
+                <a href="firme.html" class="nav-btn">🏢 Firme</a>
+                <a href="kontakti.html" class="nav-btn">👥 Kontakti</a>
+                <a href="pipeline.html" class="nav-btn active">💰 Prilike</a>
+                <a href="admin.html" class="nav-btn">⚙️ Postavke</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">--</div>
+                <span class="user-name" id="userName">Učitavanje...</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="logout()">Odjava</button>
+        </div>
+    </nav>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1>📊 Pipeline</h1>
+        
+        <div class="header-stats" id="headerStats">
+            <div class="stat-item">
+                <div class="stat-value primary" id="statAktivne">-</div>
+                <div class="stat-label">Aktivne prilike</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value warning" id="statVrijednost">-</div>
+                <div class="stat-label">Ukupna vrijednost</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value success" id="statOcekivano">-</div>
+                <div class="stat-label">Očekivani prihod</div>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <button class="btn btn-primary" onclick="openNewPrilikaModal()">+ Nova prilika</button>
+        </div>
+    </header>
+    
+    <!-- Filters -->
+    <div class="filters">
+        <div class="filter-group">
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" id="btnMoje" onclick="setViewMode('moje')">Moje prilike</button>
+                <button class="toggle-btn" id="btnSve" onclick="setViewMode('sve')">Sve prilike</button>
+            </div>
+        </div>
+        <div class="filter-group">
+            <label>Servis:</label>
+            <select id="filterServis" onchange="loadPrilike()">
+                <option value="">Svi servisi</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>
+                <input type="checkbox" id="filterAktivne" checked onchange="loadPrilike()">
+                Samo aktivne
+            </label>
+        </div>
+    </div>
+    
+    <!-- Kanban Board -->
+    <div class="kanban-container">
+        <div class="kanban-board" id="kanbanBoard">
+            <div class="loading">Učitavanje...</div>
+        </div>
+    </div>
+    
+    <!-- Nova/Uredi Prilika Modal -->
+    <div class="modal-overlay" id="prilikaModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="prilikaModalTitle">Nova prilika</h2>
+                <button class="modal-close" onclick="closeModal('prilikaModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="prilikaId">
+                
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label>Firma *</label>
+                        <input type="hidden" id="prilikaFirmaId">
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="prilikaFirmaInput" class="autocomplete-input" placeholder="Upišite naziv firme..." autocomplete="off">
+                            <div class="autocomplete-dropdown" id="firmaDropdown"></div>
+                        </div>
+                        <div class="firma-kontakt-info" id="firmaKontaktInfo" style="display:none;">
+                            <div class="kontakt-label">Kontakt</div>
+                            <select id="prilikaKontaktId" class="kontakt-select">
+                                <option value="">-- Odaberi kontakt --</option>
+                            </select>
+                            <div class="kontakt-details" id="kontaktDetails"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label>Naziv prilike *</label>
+                        <input type="text" id="prilikaNaziv" placeholder="npr. Božićno oglašavanje 2024">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Servis</label>
+                        <select id="prilikaServis">
+                            <option value="">-- Odaberi --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Faza</label>
+                        <select id="prilikaFaza"></select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vrijednost (€)</label>
+                        <input type="number" id="prilikaVrijednost" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Očekivano zatvaranje</label>
+                        <input type="date" id="prilikaZatvaranje">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Opis</label>
+                    <textarea id="prilikaOpis" placeholder="Detalji o prilici..."></textarea>
+                </div>
+                
+                <!-- Razlog gubitka (samo ako je faza Izgubljeno) -->
+                <div class="loss-reason-group" id="lossReasonGroup" style="display:none;">
+                    <div class="form-group">
+                        <label>Razlog gubitka</label>
+                        <select id="prilikaRazlogGubitka">
+                            <option value="">-- Odaberi razlog --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Konkurent (tko je dobio posao)</label>
+                        <input type="text" id="prilikaKonkurent" placeholder="Naziv konkurenta">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="btnDeletePrilika" onclick="deletePrilika()" style="display:none;">Obriši</button>
+                <div class="modal-footer-right">
+                    <button class="btn btn-outline" onclick="closeModal('prilikaModal')">Odustani</button>
+                    <button class="btn btn-primary" onclick="savePrilika()">Spremi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    
+<script src="js/pipeline.js?v=4"></script>
+</body>
+</html>

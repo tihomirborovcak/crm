@@ -1,0 +1,525 @@
+        .firma-header {
+            flex: 1;
+        }
+
+        .firma-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .firma-header .meta {
+            font-size: 13px;
+            color: var(--gray-500);
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .firma-header .meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Main Layout */
+        .main {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            color: var(--gray-500);
+            font-size: 13px;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--gray-800);
+            text-align: right;
+        }
+
+        .info-value a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .info-value a:hover { text-decoration: underline; }
+
+        .info-value.prihod {
+            color: var(--success);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: var(--radius-sm);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+
+        /* Content Area */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: white;
+            padding: 4px;
+            border-radius: var(--radius);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .tab:hover { color: var(--gray-700); }
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Kontakti */
+        .kontakt-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .kontakt-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .kontakt-info { flex: 1; }
+
+        .kontakt-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--gray-900);
+        }
+
+        .kontakt-pozicija {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .kontakt-details {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .kontakt-details a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .kontakt-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Aktivnosti */
+        .aktivnost-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--gray-300);
+        }
+
+        .aktivnost-item.poziv { border-left-color: var(--success); }
+        .aktivnost-item.email { border-left-color: var(--primary); }
+        .aktivnost-item.sastanak { border-left-color: var(--warning); }
+        .aktivnost-item.ponuda { border-left-color: #8b5cf6; }
+
+        .aktivnost-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .aktivnost-tip {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--gray-100);
+        }
+
+        .aktivnost-item.poziv .aktivnost-tip { background: #d1fae5; color: #065f46; }
+        .aktivnost-item.email .aktivnost-tip { background: #dbeafe; color: #1e40af; }
+        .aktivnost-item.sastanak .aktivnost-tip { background: #fef3c7; color: #92400e; }
+        .aktivnost-item.ponuda .aktivnost-tip { background: #ede9fe; color: #5b21b6; }
+
+        .aktivnost-datum {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .aktivnost-korisnik {
+            font-size: 11px;
+            padding: 2px 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .aktivnost-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 14px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .btn-icon:hover {
+            opacity: 1;
+        }
+
+        .aktivnost-prilika {
+            font-size: 12px;
+            color: var(--warning);
+            margin-top: 4px;
+        }
+
+        .aktivnost-naslov {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+
+        .aktivnost-opis {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .aktivnost-kontakt {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 8px;
+        }
+
+        .aktivnost-followup {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-100);
+            font-size: 13px;
+            color: var(--warning);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary:hover { background: var(--gray-300); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-600);
+        }
+        .btn-outline:hover { background: var(--gray-100); }
+
+        /* Modal */
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        /* Empty State */
+        /* Prilike kartice */
+        .prilika-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--gray-300);
+            transition: all 0.2s;
+        }
+
+        .prilika-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .prilika-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .prilika-naziv {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--gray-900);
+        }
+
+        .prilika-vrijednost {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 15px;
+        }
+
+        .prilika-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .prilika-faza {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .prilika-datum {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .prilika-datum.overdue { color: var(--danger); }
+        .prilika-datum.soon { color: var(--warning); }
+
+        .prilika-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .prilika-aktivnosti {
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+
+        .prilika-aktivnosti-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .prilika-aktivnost-item {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .prilika-aktivnost-item:last-child {
+            border-bottom: none;
+        }
+
+        .prilika-aktivnosti-more {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        /* Tagovi */
+        .tagovi-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .tag-remove:hover {
+            opacity: 1;
+        }
+
+        .tag-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px dashed var(--gray-300);
+            border-radius: var(--radius-sm);
+            background: var(--gray-50);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .tag-select:hover {
+            border-color: var(--primary);
+        }
+        
+        /* Navigation */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-left { display: flex; align-items: center; gap: 2rem; }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .nav-links { display: flex; gap: 0.5rem; }
+        .nav-btn:hover { background: #f1f5f9; color: var(--text); }
+        .nav-btn.active { background: var(--primary); color: white; }
+        
+        /* Sidebar kontakti */
+        .sidebar-kontakt {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-kontakt:last-child { border-bottom: none; }
+        .sidebar-kontakt-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sidebar-kontakt-name .primary-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .sidebar-kontakt-email {
+            font-size: 12px;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+        .sidebar-kontakt-email a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .sidebar-kontakt-email a:hover { text-decoration: underline; }
+        .sidebar-kontakt-tel {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .no-kontakti {
+            color: var(--gray-400);
+            font-size: 13px;
+            font-style: italic;
+        }

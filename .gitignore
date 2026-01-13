@@ -1,0 +1,26 @@
+# Sensitive configuration
+config.php
+
+# Claude Code local settings
+.claude/
+
+# Uploads directory (user files)
+uploads/
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

@@ -1,0 +1,414 @@
+        }
+        
+        .btn-outline:hover {
+            background: var(--bg);
+        }
+        
+        /* Filters */
+        .filters {
+            padding: 1rem 1.5rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+        
+        .filter-group select {
+            padding: 0.4rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        /* Toggle Buttons */
+        .toggle-buttons {
+            display: flex;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 3px;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            color: var(--text);
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Kanban Board */
+        .kanban-container {
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .kanban-board {
+            display: flex;
+            gap: 1rem;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .kanban-column {
+            flex: 0 0 300px;
+            background: var(--bg);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 220px);
+        }
+        
+        .column-header {
+            padding: 1rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+        
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .column-count {
+            background: rgba(255,255,255,0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+        
+        .column-value {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .column-cards {
+            padding: 0.5rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-height: 200px;
+            transition: all 0.2s;
+        }
+        
+        .column-cards.drag-over {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px dashed var(--primary);
+            border-radius: 8px;
+        }
+        
+        /* Prilika Card */
+        .prilika-card {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: grab;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .prilika-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .prilika-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        
+        .prilika-card.drag-over {
+            border-color: var(--primary);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .card-value {
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+        
+        .card-firma {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+        
+        .card-firma a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .card-firma a:hover {
+            color: var(--primary);
+        }
+
+        .card-owner {
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        .card-servis {
+            background: var(--bg);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .card-date {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .card-date.overdue {
+            color: var(--danger);
+        }
+        
+        .card-date.soon {
+            color: var(--warning);
+        }
+        
+        /* Drop zone */
+        .drop-zone {
+            min-height: 100px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        /* Modal */
+        
+            display: flex;
+        }
+        
+        
+        
+        .modal-header h2 {
+            font-size: 1.25rem;
+        }
+        
+        
+        
+        
+        
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        
+        
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        
+        /* Razlog gubitka modal */
+        .loss-reason-group {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fef2f2;
+            border-radius: 8px;
+        }
+        
+        /* Empty state */
+        .empty-column {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-light);
+        }
+        
+        /* Loading */
+        
+        /* Toast */
+        
+
+        /* Autocomplete */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-input {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1001;
+            display: none;
+        }
+
+        .autocomplete-dropdown.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: var(--bg);
+        }
+
+        .autocomplete-item .firma-naziv {
+            font-weight: 500;
+        }
+
+        .autocomplete-item .firma-info {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .autocomplete-no-results {
+            padding: 1rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .firma-kontakt-info {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .firma-kontakt-info .kontakt-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .firma-kontakt-info .kontakt-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .firma-kontakt-info .kontakt-details {
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .firma-kontakt-info .kontakt-details a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .firma-kontakt-info .no-kontakt {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .firma-kontakt-info .kontakt-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            background: white;
+        }
+        
+        /* Navigation */
+        .top-nav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-left { display: flex; align-items: center; gap: 2rem; }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .nav-links { display: flex; gap: 0.5rem; }
+        .nav-btn:hover { background: var(--bg); color: var(--text); }
+        .nav-btn.active { background: var(--primary); color: white; }

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firma - Signal CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/firma.css">
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-left">
+        <div class="logo">Signal <span>CRM</span></div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-btn">📊 Dashboard</a>
+            <a href="firme.html" class="nav-btn active">🏢 Firme</a>
+            <a href="kontakti.html" class="nav-btn">👥 Kontakti</a>
+            <a href="pipeline.html" class="nav-btn">💰 Prilike</a>
+            <a href="admin.html" class="nav-btn">⚙️ Postavke</a>
+        </div>
+    </div>
+    <button class="btn btn-outline" onclick="logout()">Odjava</button>
+</nav>
+
+<header class="header">
+    <div class="firma-header">
+        <h1 id="firmaNaziv">Učitavanje...</h1>
+        <div class="meta">
+            <span id="firmaOib"></span>
+            <span id="firmaStatus"></span>
+            <span id="firmaKategorija"></span>
+        </div>
+    </div>
+    <button class="btn btn-primary" onclick="openAktivnostModal()">+ Nova aktivnost</button>
+</header>
+
+<main class="main">
+    <aside class="sidebar">
+        <!-- Statistike -->
+        <div class="card">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="statAktivnosti">0</div>
+                    <div class="stat-label">Aktivnosti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statKontakti">0</div>
+                    <div class="stat-label">Kontakti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statPrilike">0</div>
+                    <div class="stat-label">Prilike</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statPonude">0</div>
+                    <div class="stat-label">Ponude</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="card">
+            <div class="card-title">📊 Podaci o firmi</div>
+            <div class="info-row">
+                <span class="info-label">Prihod 2024</span>
+                <span class="info-value prihod" id="firmaPrihod">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Zaposlenih</span>
+                <span class="info-value" id="firmaZaposleni">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Djelatnost</span>
+                <span class="info-value" id="firmaDjelatnost">-</span>
+            </div>
+        </div>
+
+        <!-- Kontakti -->
+        <div class="card">
+            <div class="card-title">👥 Kontakti</div>
+            <div id="sidebarKontakti">
+                <p style="color: var(--gray-400); font-size: 13px;">Učitavanje...</p>
+            </div>
+        </div>
+
+        <!-- Info firme -->
+        <div class="card">
+            <div class="card-title">📞 Info</div>
+            <div class="info-row">
+                <span class="info-label">Telefon</span>
+                <span class="info-value" id="firmaTelefon">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Web</span>
+                <span class="info-value" id="firmaWeb">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Adresa</span>
+                <span class="info-value" id="firmaAdresa">-</span>
+            </div>
+        </div>
+
+        <!-- Ovlaštene osobe -->
+        <div class="card" id="ovlasteneCard" style="display: none;">
+            <div class="card-title">👥 Ovlaštene osobe</div>
+            <p id="firmaOvlastene" style="font-size: 13px; color: var(--gray-600);"></p>
+        </div>
+
+        <!-- Tagovi -->
+        <div class="card">
+            <div class="card-title">🏷️ Tagovi</div>
+            <div id="firmaTagovi" class="tagovi-container"></div>
+            <div class="tag-add-container">
+                <select id="tagSelect" class="tag-select">
+                    <option value="">+ Dodaj tag...</option>
+                </select>
+            </div>
+        </div>
+    </aside>
+
+    <div class="content">
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('aktivnosti')">📋 Aktivnosti</button>
+            <button class="tab" onclick="switchTab('kontakti')">👥 Kontakti</button>
+            <button class="tab" onclick="switchTab('prilike')">💰 Prilike</button>
+            <button class="tab" onclick="switchTab('ponude')">📄 Ponude</button>
+        </div>
+
+        <!-- Aktivnosti Tab -->
+        <div id="tab-aktivnosti" class="tab-content active">
+            <div class="quick-actions">
+                <button class="btn btn-success" onclick="openAktivnostModal('poziv')">📞 Logiraj poziv</button>
+                <button class="btn btn-primary" onclick="openAktivnostModal('email')">✉️ Logiraj email</button>
+                <button class="btn btn-secondary" onclick="openAktivnostModal('sastanak')">🤝 Zakaži sastanak</button>
+            </div>
+            <div id="aktivnostiList"></div>
+        </div>
+
+        <!-- Kontakti Tab -->
+        <div id="tab-kontakti" class="tab-content">
+            <div class="quick-actions">
+                <button class="btn btn-primary" onclick="openKontaktModal()">+ Dodaj kontakt</button>
+            </div>
+            <div id="kontaktiList"></div>
+        </div>
+
+        <!-- Prilike Tab -->
+        <div id="tab-prilike" class="tab-content">
+            <div class="quick-actions">
+                <button class="btn btn-primary" onclick="openPrilikaModal()">+ Nova prilika</button>
+                <a href="pipeline.html" class="btn btn-secondary">📊 Pipeline</a>
+            </div>
+            <div id="prilikeList"></div>
+        </div>
+
+        <!-- Ponude Tab -->
+        <div id="tab-ponude" class="tab-content">
+            <div class="quick-actions">
+                <button class="btn btn-primary" onclick="openPonudaModal()">+ Nova ponuda</button>
+            </div>
+            <div id="ponudeList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📄</div>
+                    <p>Nema ponuda</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Kontakt Modal -->
+<div class="modal-overlay" id="kontaktModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="kontaktModalTitle">Novi kontakt</h3>
+            <button class="modal-close" onclick="closeModal('kontaktModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="kontaktId">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ime</label>
+                    <input type="text" id="kontaktIme">
+                </div>
+                <div class="form-group">
+                    <label>Prezime</label>
+                    <input type="text" id="kontaktPrezime">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Pozicija</label>
+                <input type="text" id="kontaktPozicija" placeholder="npr. Direktor, Voditelj nabave...">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="kontaktEmail">
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="text" id="kontaktTelefon">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Mobitel</label>
+                <input type="text" id="kontaktMobitel">
+            </div>
+            <div class="form-group">
+                <label>Napomena</label>
+                <textarea id="kontaktNapomena" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" id="kontaktPrimary"> Primarni kontakt</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('kontaktModal')">Odustani</button>
+            <button class="btn btn-primary" onclick="saveKontakt()">Spremi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Aktivnost Modal -->
+<div class="modal-overlay" id="aktivnostModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="aktivnostModalTitle">Nova aktivnost</h3>
+            <button class="modal-close" onclick="closeModal('aktivnostModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="aktivnostId">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tip</label>
+                    <select id="aktivnostTip">
+                        <option value="poziv">📞 Poziv</option>
+                        <option value="email">✉️ Email</option>
+                        <option value="sastanak">🤝 Sastanak</option>
+                        <option value="ponuda">📄 Ponuda</option>
+                        <option value="napomena">📝 Napomena</option>
+                        <option value="zadatak">✅ Zadatak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kontakt osoba</label>
+                    <select id="aktivnostKontakt">
+                        <option value="">-- Odaberi --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="aktivnostPrilikaGroup" style="display: none;">
+                <label>💰 Vezano uz priliku</label>
+                <select id="aktivnostPrilika">
+                    <option value="">-- Nije vezano uz priliku --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Naslov / Sažetak</label>
+                <input type="text" id="aktivnostNaslov" placeholder="Kratki opis aktivnosti">
+            </div>
+            <div class="form-group">
+                <label>Opis</label>
+                <textarea id="aktivnostOpis" rows="3" placeholder="Detalji razgovora, dogovora..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Rezultat / Zaključak</label>
+                <textarea id="aktivnostRezultat" rows="2" placeholder="Što je dogovoreno?"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Datum i vrijeme</label>
+                    <input type="datetime-local" id="aktivnostDatum">
+                </div>
+                <div class="form-group">
+                    <label>Trajanje (min)</label>
+                    <input type="number" id="aktivnostTrajanje" placeholder="15">
+                </div>
+            </div>
+            <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--gray-200);">
+            <div class="form-group">
+                <label>🔔 Sljedeći korak</label>
+                <input type="text" id="aktivnostSljedeci" placeholder="npr. Poslati ponudu, Nazvati za tjedan dana...">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Datum sljedećeg</label>
+                    <input type="date" id="aktivnostDatumSljedeceg">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="aktivnostStatus">
+                        <option value="zavrsena">Završena</option>
+                        <option value="planirana">Planirana</option>
+                        <option value="otkazana">Otkazana</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('aktivnostModal')">Odustani</button>
+            <button class="btn btn-primary" onclick="saveAktivnost()">Spremi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Prilika Modal -->
+<div class="modal-overlay" id="prilikaModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="prilikaModalTitle">Nova prilika</h3>
+            <button class="modal-close" onclick="closeModal('prilikaModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="prilikaId">
+            <div class="form-group">
+                <label>Naziv prilike *</label>
+                <input type="text" id="prilikaNaziv" placeholder="npr. Božićna kampanja 2026">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Faza</label>
+                    <select id="prilikaFazaId"></select>
+                </div>
+                <div class="form-group">
+                    <label>Vrijednost (€)</label>
+                    <input type="number" id="prilikaVrijednost" min="0" step="0.01">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Očekivano zatvaranje</label>
+                <input type="date" id="prilikaDatumZatvaranja">
+            </div>
+            <div class="form-group">
+                <label>Opis</label>
+                <textarea id="prilikaOpis" rows="3" placeholder="Detalji o prilici..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('prilikaModal')">Odustani</button>
+            <button class="btn btn-primary" onclick="savePrilika()">Spremi</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/firma.js?v=2"></script>
+</body>
+</html>

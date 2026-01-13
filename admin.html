@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administracija - Signal CRM</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo">Signal <span>CRM</span></div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-btn">📊 Dashboard</a>
+                <a href="firme.html" class="nav-btn">🏢 Firme</a>
+                <a href="kontakti.html" class="nav-btn">👥 Kontakti</a>
+                <a href="pipeline.html" class="nav-btn">💰 Prilike</a>
+                <a href="admin.html" class="nav-btn active">⚙️ Postavke</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">--</div>
+                <span class="user-name" id="userName">Učitavanje...</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="logout()">Odjava</button>
+        </div>
+    </nav>
+    
+    <header class="header">
+        <h1>⚙️ Administracija</h1>
+    </header>
+    
+    <main class="main">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('korisnici')">👤 Korisnici</button>
+            <button class="tab" onclick="switchTab('servisi')">🏷️ Servisi</button>
+            <button class="tab" onclick="switchTab('kategorije')">📁 Kategorije</button>
+            <button class="tab" onclick="switchTab('tagovi')">🏷️ Tagovi</button>
+            <button class="tab" onclick="switchTab('faze')">📊 Faze pipeline</button>
+            <button class="tab" onclick="switchTab('razlozi')">❌ Razlozi gubitka</button>
+        </div>
+        
+        <!-- KORISNICI -->
+        <div id="tab-korisnici" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Korisnici sustava</h3>
+                    <button class="btn btn-primary" onclick="openModal('korisnik')">+ Novi korisnik</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ime i prezime</th>
+                            <th>Email</th>
+                            <th>Uloga</th>
+                            <th>Status</th>
+                            <th>Zadnja prijava</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody id="korisniciTable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- SERVISI -->
+        <div id="tab-servisi" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Servisi / Usluge</h3>
+                    <button class="btn btn-primary" onclick="openModal('servis')">+ Novi servis</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th>Kratica</th>
+                            <th>Boja</th>
+                            <th>Status</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servisiTable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- KATEGORIJE -->
+        <div id="tab-kategorije" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Kategorije firmi</h3>
+                    <button class="btn btn-primary" onclick="openModal('kategorija')">+ Nova kategorija</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th>Boja</th>
+                            <th>Status</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kategorijeTable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- TAGOVI -->
+        <div id="tab-tagovi" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Tagovi za segmentaciju</h3>
+                    <button class="btn btn-primary" onclick="openModal('tag')">+ Novi tag</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th>Boja</th>
+                            <th>Broj firmi</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tagoviTable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- FAZE PIPELINE -->
+        <div id="tab-faze" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Faze prodajnog procesa</h3>
+                    <button class="btn btn-primary" onclick="openModal('faza')">+ Nova faza</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Redoslijed</th>
+                            <th>Naziv</th>
+                            <th>Vjerojatnost</th>
+                            <th>Boja</th>
+                            <th>Tip</th>
+                            <th>Status</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fazeTable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- RAZLOZI GUBITKA -->
+        <div id="tab-razlozi" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Razlozi gubitka posla</h3>
+                    <button class="btn btn-primary" onclick="openModal('razlog')">+ Novi razlog</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Redoslijed</th>
+                            <th>Naziv</th>
+                            <th>Status</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody id="razloziTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <!-- KORISNIK MODAL -->
+    <div class="modal-overlay" id="korisnikModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="korisnikModalTitle">Novi korisnik</h2>
+                <button class="modal-close" onclick="closeModal('korisnikModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="korisnikId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ime *</label>
+                        <input type="text" id="korisnikIme">
+                    </div>
+                    <div class="form-group">
+                        <label>Prezime *</label>
+                        <input type="text" id="korisnikPrezime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="korisnikEmail">
+                </div>
+                <div class="form-group">
+                    <label>Lozinka <span id="lozinkaHint">(ostaviti prazno za zadržati postojeću)</span></label>
+                    <input type="password" id="korisnikLozinka">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Uloga</label>
+                        <select id="korisnikUloga">
+                            <option value="prodavac">Prodavač</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="korisnikStatus">
+                            <option value="aktivan">Aktivan</option>
+                            <option value="neaktivan">Neaktivan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="text" id="korisnikTelefon">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('korisnikModal')">Odustani</button>
+                <button class="btn btn-primary" onclick="saveKorisnik()">Spremi</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SERVIS MODAL -->
+    <div class="modal-overlay" id="servisModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="servisModalTitle">Novi servis</h2>
+                <button class="modal-close" onclick="closeModal('servisModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="servisId">
+                <div class="form-group">
+                    <label>Naziv *</label>
+                    <input type="text" id="servisNaziv" placeholder="npr. Zagorski list">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Kratica</label>
+                        <input type="text" id="servisKratica" placeholder="npr. ZL">
+                    </div>
+                    <div class="form-group">
+                        <label>Boja</label>
+                        <input type="color" id="servisBoja" value="#3b82f6">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Opis</label>
+                    <textarea id="servisOpis" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="servisAktivan">
+                        <option value="1">Aktivan</option>
+                        <option value="0">Neaktivan</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('servisModal')">Odustani</button>
+                <button class="btn btn-primary" onclick="saveServis()">Spremi</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- KATEGORIJA MODAL -->
+    <div class="modal-overlay" id="kategorijaModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="kategorijaModalTitle">Nova kategorija</h2>
+                <button class="modal-close" onclick="closeModal('kategorijaModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="kategorijaId">
+                <div class="form-group">
+                    <label>Naziv *</label>
+                    <input type="text" id="kategorijaNaziv" placeholder="npr. Ugostiteljstvo">
+                </div>
+                <div class="form-group">
+                    <label>Boja</label>
+                    <input type="color" id="kategorijaBoja" value="#22c55e">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="kategorijaAktivan">
+                        <option value="1">Aktivna</option>
+                        <option value="0">Neaktivna</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('kategorijaModal')">Odustani</button>
+                <button class="btn btn-primary" onclick="saveKategorija()">Spremi</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAZA MODAL -->
+    <div class="modal-overlay" id="fazaModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="fazaModalTitle">Nova faza</h2>
+                <button class="modal-close" onclick="closeModal('fazaModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="fazaId">
+                <div class="form-group">
+                    <label>Naziv *</label>
+                    <input type="text" id="fazaNaziv" placeholder="npr. Pregovori">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Redoslijed</label>
+                        <input type="number" id="fazaRedoslijed" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Vjerojatnost (%)</label>
+                        <input type="number" id="fazaVjerojatnost" value="50" min="0" max="100">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Boja</label>
+                        <input type="color" id="fazaBoja" value="#3b82f6">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="fazaAktivan">
+                            <option value="1">Aktivna</option>
+                            <option value="0">Neaktivna</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="fazaIsWon"> Završna faza - DOBIVENO
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="fazaIsLost"> Završna faza - IZGUBLJENO
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Opis</label>
+                    <textarea id="fazaOpis" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('fazaModal')">Odustani</button>
+                <button class="btn btn-primary" onclick="saveFaza()">Spremi</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- RAZLOG MODAL -->
+    <div class="modal-overlay" id="razlogModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="razlogModalTitle">Novi razlog gubitka</h2>
+                <button class="modal-close" onclick="closeModal('razlogModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="razlogId">
+                <div class="form-group">
+                    <label>Naziv *</label>
+                    <input type="text" id="razlogNaziv" placeholder="npr. Preskupo">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Redoslijed</label>
+                        <input type="number" id="razlogRedoslijed" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="razlogAktivan">
+                            <option value="1">Aktivan</option>
+                            <option value="0">Neaktivan</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('razlogModal')">Odustani</button>
+                <button class="btn btn-primary" onclick="saveRazlog()">Spremi</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TAG MODAL -->
+    <div class="modal-overlay" id="tagModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="tagModalTitle">Novi tag</h2>
+                <button class="modal-close" onclick="closeModal('tagModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="tagId">
+                <div class="form-group">
+                    <label>Naziv *</label>
+                    <input type="text" id="tagNaziv" placeholder="npr. Škola">
+                </div>
+                <div class="form-group">
+                    <label>Boja</label>
+                    <input type="color" id="tagBoja" value="#3b82f6">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('tagModal')">Odustani</button>
+                <button class="btn btn-primary" onclick="saveTag()">Spremi</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+<script src="js/admin.js?v=2"></script>
+</body>
+</html>

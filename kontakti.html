@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakti - Signal CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/kontakti.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="header-left">
+        <div class="header-logo">Signal <span>CRM</span></div>
+        <nav class="header-nav">
+            <a href="index.html" class="nav-btn">📊 Dashboard</a>
+            <a href="firme.html" class="nav-btn">🏢 Firme</a>
+            <a href="kontakti.html" class="nav-btn active">👥 Kontakti</a>
+            <a href="pipeline.html" class="nav-btn">💰 Prilike</a>
+            <a href="admin.html" class="nav-btn">⚙️ Postavke</a>
+        </nav>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">TB</div>
+            <span class="user-name" id="userName">Korisnik</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Odjava</button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="main">
+    <div class="page-header">
+        <h1 class="page-title">👥 Kontakti</h1>
+        <button class="btn btn-primary" onclick="openKontaktModal()">+ Novi kontakt</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">Ukupno kontakata</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value success" id="statWithEmail">0</div>
+            <div class="stat-label">S emailom</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value danger" id="statWithoutEmail">0</div>
+            <div class="stat-label">Bez emaila ⚠️</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value warning" id="statFirmeBezEmaila">0</div>
+            <div class="stat-label">Firme bez kontakta s emailom</div>
+        </div>
+    </div>
+
+    <!-- Alert for firms without email -->
+    <div class="alert-box danger" id="alertFirmeBezEmaila" style="display: none;">
+        <span>⚠️</span>
+        <div>
+            <strong id="alertCount">0</strong> firmi nema niti jedan kontakt s emailom. 
+            <a href="#" onclick="filterBezEmaila()" style="color: inherit; font-weight: 600;">Prikaži →</a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Pretraži po imenu, emailu, firmi...">
+        </div>
+        <select class="filter-select" id="filterEmail">
+            <option value="">Svi kontakti</option>
+            <option value="with">S emailom ✓</option>
+            <option value="without">Bez emaila ✗</option>
+        </select>
+        <select class="filter-select" id="filterFirma">
+            <option value="">Sve firme</option>
+            <option value="bez-emaila">Firme bez kontakta s emailom ⚠️</option>
+        </select>
+        <select class="filter-select" id="filterPrimary">
+            <option value="">Svi</option>
+            <option value="1">Samo primarni</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <span class="table-title">Lista kontakata</span>
+            <span class="table-count" id="tableCount">0 kontakata</span>
+        </div>
+        <div id="kontaktiTableBody">
+            <div class="loading">
+                <div class="spinner"></div>
+                Učitavanje...
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal: Uredi kontakt -->
+<div class="modal-overlay" id="kontaktModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="kontaktModalTitle">Uredi kontakt</h2>
+            <button class="modal-close" onclick="closeModal('kontaktModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="kontaktForm">
+                <input type="hidden" id="kontaktId">
+                <input type="hidden" id="kontaktFirmaId">
+
+                <div class="form-group">
+                    <label>Firma</label>
+                    <input type="text" id="kontaktFirmaNaziv" readonly style="background: var(--gray-50);">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ime *</label>
+                        <input type="text" id="kontaktIme" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prezime</label>
+                        <input type="text" id="kontaktPrezime">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email 📧</label>
+                    <input type="email" id="kontaktEmail" placeholder="email@firma.hr">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" id="kontaktTelefon">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobitel</label>
+                        <input type="text" id="kontaktMobitel">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pozicija</label>
+                    <input type="text" id="kontaktPozicija" placeholder="npr. Direktor, Računovodstvo...">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="kontaktPrimary">
+                        Primarni kontakt firme
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('kontaktModal')">Odustani</button>
+            <button type="button" class="btn btn-primary" onclick="saveKontakt()">Spremi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/kontakti.js?v=2"></script>
+</body>
+</html>

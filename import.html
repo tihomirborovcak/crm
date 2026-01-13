@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import firmi - Signal CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --primary: #3b82f6;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .header h1 { font-size: 1.5rem; }
+        
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background: var(--bg); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .upload-zone input { display: none; }
+        
+        .upload-icon { font-size: 3rem; margin-bottom: 1rem; }
+        
+        .upload-text { color: var(--text-light); }
+        
+        .tag-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .tag-selector label {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        
+        .tag-selector select, .tag-selector input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+        
+        .tag-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+        
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover { background: rgba(59, 130, 246, 0.03); }
+        
+        .status-new { color: var(--success); font-weight: 500; }
+        .status-exists { color: var(--warning); font-weight: 500; }
+        .status-error { color: var(--danger); font-weight: 500; }
+        
+        .checkbox-cell { width: 40px; text-align: center; }
+        
+        .table-container {
+            max-height: 600px;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .hidden { display: none !important; }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s;
+        }
+        
+        .toast-success { background: var(--success); }
+        .toast-error { background: var(--danger); }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .link { color: var(--primary); text-decoration: none; }
+        .link:hover { text-decoration: underline; }
+        
+        /* Navigation */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-left { display: flex; align-items: center; gap: 2rem; }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .logo span { color: #1e293b; }
+        .nav-links { display: flex; gap: 0.5rem; }
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #f1f5f9; color: #1e293b; }
+        .nav-btn.active { background: var(--primary); color: white; }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo">Signal <span>CRM</span></div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-btn">📊 Dashboard</a>
+                <a href="firme.html" class="nav-btn active">🏢 Firme</a>
+                <a href="kontakti.html" class="nav-btn">👥 Kontakti</a>
+                <a href="pipeline.html" class="nav-btn">💰 Prilike</a>
+                <a href="admin.html" class="nav-btn">⚙️ Postavke</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="header">
+        <h1>📥 Import firmi iz Infobiz-a</h1>
+        <div class="header-controls">
+            <div class="tag-selector">
+                <label>Tag:</label>
+                <select id="tagSelect">
+                    <option value="">-- Bez taga --</option>
+                </select>
+                <input type="text" id="newTagInput" placeholder="Novi tag..." style="width: 120px;">
+                <button class="btn btn-outline" onclick="createTag()">+ Dodaj</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main">
+        <div class="card" id="uploadCard">
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📊</div>
+                <div class="upload-text">
+                    <strong>Povuci Excel datoteku ovdje</strong><br>
+                    ili klikni za odabir
+                </div>
+                <input type="file" id="fileInput" accept=".xlsx,.xls">
+            </div>
+        </div>
+        
+        <div class="card hidden" id="previewCard">
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-value" id="statTotal">0</span>
+                    <span class="stat-label">Ukupno</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value status-new" id="statNew">0</span>
+                    <span class="stat-label">Novih</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value status-exists" id="statExists">0</span>
+                    <span class="stat-label">Već postoji</span>
+                </div>
+                <div class="stat" id="selectedTagDisplay" style="display: none;">
+                    <span class="stat-label">Tag</span>
+                    <span class="tag-badge" id="selectedTagBadge"></span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="importSelected()" id="importBtn">
+                    📥 Importaj odabrane (<span id="selectedCount">0</span>)
+                </button>
+                <button class="btn btn-outline" onclick="selectAll(true)">✓ Označi sve nove</button>
+                <button class="btn btn-outline" onclick="selectAll(false)">✗ Odznači sve</button>
+                <button class="btn btn-outline" onclick="resetUpload()">🔄 Nova datoteka</button>
+            </div>
+            
+            <div class="progress-bar hidden" id="progressBar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-cell"><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th>
+                            <th>Status</th>
+                            <th>OIB</th>
+                            <th>Naziv</th>
+                            <th>Mjesto</th>
+                            <th>Email</th>
+                            <th>Prihod 2024</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'api.php?endpoint=';
+        let parsedData = [];
+        let existingOibs = new Set();
+        let selectedTag = null;
+        
+        // Učitaj tagove
+        async function loadTags() {
+            try {
+                const res = await fetch(API_BASE + 'tagovi');
+                const data = await res.json();
+                if (data.success) {
+                    const select = document.getElementById('tagSelect');
+                    select.innerHTML = '<option value="">-- Bez taga --</option>';
+                    data.data.forEach(tag => {
+                        select.innerHTML += `<option value="${tag.id}" data-color="${tag.boja}">${tag.naziv}</option>`;
+                    });
+                    
+                    // Postavi "minimax" ako postoji
+                    const minimaxOption = [...select.options].find(o => o.text.toLowerCase() === 'minimax');
+                    if (minimaxOption) {
+                        select.value = minimaxOption.value;
+                        updateSelectedTag();
+                    }
+                }
+            } catch (e) {
+                console.error('Greška pri učitavanju tagova:', e);
+            }
+        }
+        
+        // Kreiraj novi tag
+        async function createTag() {
+            const input = document.getElementById('newTagInput');
+            const naziv = input.value.trim();
+            if (!naziv) return;
+            
+            try {
+                const res = await fetch(API_BASE + 'tag-ensure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ naziv, boja: '#6366f1' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    input.value = '';
+                    await loadTags();
+                    document.getElementById('tagSelect').value = data.data.id;
+                    updateSelectedTag();
+                    showToast('Tag kreiran: ' + naziv, 'success');
+                }
+            } catch (e) {
+                showToast('Greška pri kreiranju taga', 'error');
+            }
+        }
+        
+        function updateSelectedTag() {
+            const select = document.getElementById('tagSelect');
+            const option = select.options[select.selectedIndex];
+            const display = document.getElementById('selectedTagDisplay');
+            const badge = document.getElementById('selectedTagBadge');
+            
+            if (select.value) {
+                selectedTag = { id: select.value, naziv: option.text, boja: option.dataset.color || '#6366f1' };
+                badge.textContent = selectedTag.naziv;
+                badge.style.background = selectedTag.boja;
+                display.style.display = 'flex';
+            } else {
+                selectedTag = null;
+                display.style.display = 'none';
+            }
+        }
+        
+        document.getElementById('tagSelect').addEventListener('change', updateSelectedTag);
+        
+        // Upload
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+        uploadZone.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
+        
+        async function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = async e => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                
+                // Pronađi header red
+                let headerRow = 0;
+                for (let i = 0; i < Math.min(5, json.length); i++) {
+                    if (json[i] && json[i].some(cell => String(cell).toUpperCase() === 'OIB')) {
+                        headerRow = i;
+                        break;
+                    }
+                }
+                
+                const headers = json[headerRow].map(h => String(h || '').trim());
+                const rows = json.slice(headerRow + 1);
+                
+                // Mapiraj stupce
+                const colMap = {
+                    oib: headers.findIndex(h => h.toUpperCase() === 'OIB'),
+                    naziv: headers.findIndex(h => h.toUpperCase() === 'NAZIV'),
+                    email: headers.findIndex(h => h.includes('E-pošta') || h.includes('EMAIL')),
+                    adresa: headers.findIndex(h => h.toUpperCase() === 'ULICA'),
+                    posta: headers.findIndex(h => h.includes('Poštanski')),
+                    mjesto: headers.findIndex(h => h.toUpperCase() === 'MJESTO'),
+                    grad_opcina: headers.findIndex(h => h.includes('Općina/grad')),
+                    zupanija: headers.findIndex(h => h.toUpperCase() === 'ŽUPANIJA'),
+                    web: headers.findIndex(h => h.toUpperCase() === 'WEB'),
+                    tip_subjekta: headers.findIndex(h => h.includes('Vrsta subjekta')),
+                    djelatnost: headers.findIndex(h => h.includes('Područje djelatnosti')),
+                    ovlastene_osobe: headers.findIndex(h => h.includes('Ovlaštene osobe')),
+                    prihod: headers.findIndex(h => h.includes('PRIHODI')),
+                    zaposleni: headers.findIndex(h => h.includes('zaposlenih'))
+                };
+                
+                parsedData = rows
+                    .filter(row => row[colMap.oib])
+                    .map(row => ({
+                        oib: String(row[colMap.oib] || '').padStart(11, '0'),
+                        naziv: row[colMap.naziv] || '',
+                        email: row[colMap.email] || '',
+                        adresa: row[colMap.adresa] || '',
+                        postanski_broj: row[colMap.posta] || '',
+                        mjesto: row[colMap.mjesto] || '',
+                        grad_opcina: row[colMap.grad_opcina] || '',
+                        zupanija: row[colMap.zupanija] || '',
+                        web: row[colMap.web] || '',
+                        tip_subjekta: row[colMap.tip_subjekta] || '',
+                        djelatnost: row[colMap.djelatnost] || '',
+                        ovlastene_osobe: row[colMap.ovlastene_osobe] || '',
+                        prihod_2024: parseFloat(String(row[colMap.prihod] || '0').replace(/[^\d.-]/g, '')) || null,
+                        broj_zaposlenih: parseInt(row[colMap.zaposleni]) || null
+                    }));
+                
+                await checkExisting();
+                renderTable();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        
+        async function checkExisting() {
+            // Provjeri sve OIB-ove odjednom
+            const oibs = parsedData.map(f => f.oib);
+            try {
+                const res = await fetch(API_BASE + 'check-oibs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ oibs })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    existingOibs = new Set(data.data.existing || []);
+                }
+            } catch (e) {
+                // Fallback - sve su nove
+                existingOibs = new Set();
+            }
+        }
+        
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            let newCount = 0, existsCount = 0;
+            
+            tbody.innerHTML = parsedData.map((firma, i) => {
+                const exists = existingOibs.has(firma.oib);
+                if (exists) existsCount++; else newCount++;
+                
+                return `
+                    <tr data-index="${i}" class="${exists ? 'exists' : 'new'}">
+                        <td class="checkbox-cell">
+                            <input type="checkbox" class="row-check" data-index="${i}" ${!exists ? 'checked' : ''}>
+                        </td>
+                        <td class="${exists ? 'status-exists' : 'status-new'}">
+                            ${exists ? '⚠️ Postoji' : '✅ Nova'}
+                        </td>
+                        <td>${firma.oib}</td>
+                        <td><strong>${firma.naziv}</strong></td>
+                        <td>${firma.mjesto || firma.grad_opcina}</td>
+                        <td>${firma.email || '-'}</td>
+                        <td>${firma.prihod_2024 ? formatNumber(firma.prihod_2024) + ' €' : '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('statTotal').textContent = parsedData.length;
+            document.getElementById('statNew').textContent = newCount;
+            document.getElementById('statExists').textContent = existsCount;
+            
+            document.getElementById('uploadCard').classList.add('hidden');
+            document.getElementById('previewCard').classList.remove('hidden');
+            
+            updateSelectedCount();
+            
+            // Event listeneri za checkboxe
+            document.querySelectorAll('.row-check').forEach(cb => {
+                cb.addEventListener('change', updateSelectedCount);
+            });
+        }
+        
+        function formatNumber(n) {
+            return new Intl.NumberFormat('hr-HR').format(Math.round(n));
+        }
+        
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('.row-check:checked').length;
+            document.getElementById('selectedCount').textContent = count;
+            document.getElementById('importBtn').disabled = count === 0;
+        }
+        
+        function selectAll(onlyNew) {
+            document.querySelectorAll('.row-check').forEach(cb => {
+                const row = cb.closest('tr');
+                if (onlyNew) {
+                    cb.checked = row.classList.contains('new');
+                } else {
+                    cb.checked = false;
+                }
+            });
+            updateSelectedCount();
+        }
+        
+        function toggleAll(master) {
+            document.querySelectorAll('.row-check').forEach(cb => cb.checked = master.checked);
+            updateSelectedCount();
+        }
+        
+        async function importSelected() {
+            const selected = [...document.querySelectorAll('.row-check:checked')]
+                .map(cb => parsedData[cb.dataset.index]);
+            
+            if (!selected.length) return;
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            progressBar.classList.remove('hidden');
+            
+            const tagId = selectedTag?.id || null;
+            
+            try {
+                const res = await fetch(API_BASE + 'import-bulk', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        firme: selected,
+                        tag_id: tagId,
+                        skip_existing: true
+                    })
+                });
+                
+                const data = await res.json();
+                progressFill.style.width = '100%';
+                
+                if (data.success) {
+                    const r = data.data;
+                    showToast(
+                        `Importano: ${r.imported}, Preskočeno: ${r.skipped}` + 
+                        (r.tagged_existing ? `, Tagirano postojećih: ${r.tagged_existing}` : ''),
+                        'success'
+                    );
+                    
+                    // Refreshaj prikaz
+                    setTimeout(() => {
+                        resetUpload();
+                    }, 2000);
+                } else {
+                    showToast('Greška: ' + data.error, 'error');
+                }
+            } catch (e) {
+                showToast('Greška pri importu: ' + e.message, 'error');
+            }
+            
+            setTimeout(() => progressBar.classList.add('hidden'), 2000);
+        }
+        
+        function resetUpload() {
+            parsedData = [];
+            existingOibs = new Set();
+            document.getElementById('uploadCard').classList.remove('hidden');
+            document.getElementById('previewCard').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+        }
+        
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+        
+        // Init
+        loadTags();
+    </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal CRM 2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/firme.css">
+</head>
+<body>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="loginScreen">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>Signal <span>CRM</span></h1>
+                <p>Verzija 2.0</p>
+            </div>
+            
+            <div id="loginError" class="login-error"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required placeholder="vas@email.hr">
+                </div>
+                <div class="form-group">
+                    <label>Lozinka</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Prijava
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="app">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo">Signal <span>CRM</span></div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-btn">📊 Dashboard</a>
+                <button class="nav-btn active" data-view="firme">🏢 Firme</button>
+                <a href="kontakti.html" class="nav-btn">👥 Kontakti</a>
+                <a href="pipeline.html" class="nav-btn">💰 Prilike</a>
+                <a href="admin.html" class="nav-btn">⚙️ Postavke</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar">TB</div>
+                <span class="user-name" id="userName">Tihomir Borovčak</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="logoutBtn">Odjava</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Ukupno firmi</span>
+                    <div class="stat-card-icon" style="background: #dbeafe;">🏢</div>
+                </div>
+                <div class="stat-card-value" id="statFirme">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Aktivni klijenti</span>
+                    <div class="stat-card-icon" style="background: #dcfce7;">✅</div>
+                </div>
+                <div class="stat-card-value" id="statAktivni">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Potencijalni</span>
+                    <div class="stat-card-icon" style="background: #fef3c7;">⏳</div>
+                </div>
+                <div class="stat-card-value" id="statPotencijalni">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Prilike (vrijednost)</span>
+                    <div class="stat-card-icon" style="background: #f3e8ff;">💰</div>
+                </div>
+                <div class="stat-card-value" id="statPrilike">0 €</div>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title" id="pageTitle">Firme</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btnNovaFirma">+ Nova firma</button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <div class="filters-row">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Pretraži po nazivu, OIB-u, telefonu...">
+                </div>
+            </div>
+
+            <div class="filters-row" style="margin-top: 16px;">
+                <div class="filter-group">
+                    <span class="filter-group-label">Vrsta</span>
+                    <div class="filter-group-selects">
+                        <select class="filter-select" id="filterKategorija">
+                            <option value="">Sve kategorije</option>
+                        </select>
+                        <select class="filter-select" id="filterTip">
+                            <option value="">Svi tipovi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-group-label">Lokacija</span>
+                    <div class="filter-group-selects">
+                        <select class="filter-select" id="filterZupanija">
+                            <option value="">Sve županije</option>
+                        </select>
+                        <select class="filter-select" id="filterGrad">
+                            <option value="">Svi gradovi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-group-label">Status</span>
+                    <div class="filter-group-selects">
+                        <select class="filter-select" id="filterStatus">
+                            <option value="">Svi statusi</option>
+                            <option value="aktivan">Aktivni</option>
+                            <option value="potencijalan">Potencijalni</option>
+                            <option value="neaktivan">Neaktivni</option>
+                        </select>
+                        <select class="filter-select" id="filterTag">
+                            <option value="">Svi tagovi</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <span class="table-title">Lista firmi</span>
+                <span class="table-count" id="tableCount">0 firmi</span>
+            </div>
+            
+            <!-- Bulk Actions Bar -->
+            <div class="bulk-actions-bar" id="bulkActionsBar" style="display: none;">
+                <span class="bulk-count"><span id="selectedCount">0</span> odabrano</span>
+                <select id="bulkTagSelect" class="bulk-tag-select">
+                    <option value="">Odaberi tag...</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="bulkAddTag()">+ Dodaj tag</button>
+                <button class="btn btn-outline btn-sm" onclick="bulkRemoveTag()">- Ukloni tag</button>
+                <button class="btn btn-outline btn-sm" onclick="clearSelection()">Poništi</button>
+            </div>
+            
+            <div id="firmeTableBody">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Učitavanje...
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ==================== MODAL: NOVA/UREDI FIRMA ==================== -->
+<div class="modal-overlay" id="firmaModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="firmaModalTitle">Nova firma</h2>
+            <button class="modal-close" onclick="closeModal('firmaModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="firmaForm">
+                <input type="hidden" id="firmaId">
+                <input type="hidden" id="centralnaKupacId">
+                
+                <!-- Info sekcija - prikazuje se samo kod uređivanja -->
+                <div id="firmaInfoSection" style="display: none;">
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-label">Prihod 2024</div>
+                            <div class="info-value" id="infoPrihod">-</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Zaposlenih</div>
+                            <div class="info-value" id="infoZaposleni">-</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Djelatnost</div>
+                            <div class="info-value info-small" id="infoDjelatnost">-</div>
+                        </div>
+                    </div>
+                    <div class="info-ovlastene" id="infoOvlasteneWrapper" style="display: none;">
+                        <div class="info-label">👥 Ovlaštene osobe</div>
+                        <div class="info-text" id="infoOvlastene"></div>
+                    </div>
+                    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--gray-200);">
+                </div>
+                
+                <!-- Autocomplete pretraga -->
+                <div class="form-group" id="autocompleteWrapper">
+                    <label>🔍 Pretraži postojeće kupce</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="autocompleteInput" placeholder="Upiši naziv, OIB, email ili mjesto..." autocomplete="off">
+                        <div class="autocomplete-results" id="autocompleteResults"></div>
+                    </div>
+                    <small style="color: var(--gray-500); font-size: 12px;">Počni tipkati za pretragu centralne baze kupaca</small>
+                </div>
+                
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--gray-200);">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Naziv firme *</label>
+                        <input type="text" id="firmaNaziv" required>
+                    </div>
+                    <div class="form-group">
+                        <label>OIB</label>
+                        <input type="text" id="firmaOib" maxlength="11">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tip subjekta</label>
+                        <select id="firmaTip">
+                            <option value="">Odaberi...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategorija</label>
+                        <select id="firmaKategorija">
+                            <option value="">Odaberi...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" id="firmaTelefon">
+                    </div>
+                    <div class="form-group">
+                        <label>Web</label>
+                        <input type="text" id="firmaWeb" placeholder="www.example.hr">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label>Adresa</label>
+                        <input type="text" id="firmaAdresa">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Županija</label>
+                        <select id="firmaZupanija">
+                            <option value="">Odaberi...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Grad/Općina</label>
+                        <select id="firmaGrad">
+                            <option value="">Odaberi...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="firmaStatus">
+                            <option value="potencijalan">Potencijalan</option>
+                            <option value="aktivan">Aktivan</option>
+                            <option value="neaktivan">Neaktivan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Potencijal</label>
+                        <select id="firmaPotencijal">
+                            <option value="nizak">Nizak</option>
+                            <option value="srednji">Srednji</option>
+                            <option value="visok">Visok</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Zainteresiran za servise</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="servis1" value="1"> Zagorski list
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="servis2" value="2"> Signalprint
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="servis3" value="3"> Plakati/Outdoor
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="servis4" value="4"> Zagorje.com
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tagovi</label>
+                    <div class="tags-selector" id="firmaTagsContainer">
+                        <!-- Tagovi se učitavaju dinamički -->
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <input type="text" id="noviTagInput" placeholder="Novi tag..." style="flex: 1; padding: 8px; border: 1px solid var(--gray-300); border-radius: 6px;">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="dodajNoviTagFirmi()">+ Dodaj</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Napomena</label>
+                    <textarea id="firmaNapomena" rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('firmaModal')">Odustani</button>
+            <button type="button" class="btn btn-primary" onclick="saveFirma()">Spremi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+
+<script src="js/firme.js?v=2"></script>
+</body>
+</html>
