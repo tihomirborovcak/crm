@@ -33,3 +33,6 @@ config_server.php
 
 # Archives
 *.zip
+
+# Batch files
+*.bat
