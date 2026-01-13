@@ -204,8 +204,8 @@
 
         th {
             text-align: left;
-            padding: 12px 16px;
-            font-size: 12px;
+            padding: 8px 10px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--gray-500);
             text-transform: uppercase;
@@ -215,9 +215,9 @@
         }
 
         td {
-            padding: 16px;
+            padding: 8px 10px;
             border-bottom: 1px solid var(--gray-100);
-            font-size: 14px;
+            font-size: 12px;
         }
 
         tr:hover {
@@ -230,47 +230,65 @@
 
         .firma-name {
             font-weight: 600;
+            font-size: 12px;
             color: var(--gray-900);
+            display: inline;
         }
 
         .firma-email {
-            font-size: 13px;
+            font-size: 11px;
             color: var(--gray-500);
+            display: inline;
         }
 
         .firma-lokacija {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--gray-500);
-            margin-top: 2px;
+            display: inline;
+            margin-left: 8px;
+        }
+
+        .firma-oib {
+            font-size: 10px;
+            color: var(--gray-400);
+            font-family: 'JetBrains Mono', monospace;
+            display: inline;
+            margin-left: 8px;
         }
 
         .kontakt-info {
-            font-size: 13px;
+            font-size: 11px;
+            white-space: nowrap;
         }
 
         .kontakt-name {
             font-weight: 500;
             color: var(--gray-800);
+            display: inline;
         }
 
         .kontakt-pozicija {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--gray-500);
             font-style: italic;
+            display: inline;
+            margin-left: 6px;
         }
 
         .kontakt-email {
             color: var(--primary);
+            display: inline;
+            margin-left: 6px;
         }
 
         .kontakt-tel {
             color: var(--gray-600);
+            display: inline;
+            margin-left: 6px;
         }
 
-        .firma-oib {
-            font-size: 11px;
-            color: var(--gray-400);
-            font-family: 'JetBrains Mono', monospace;
+        td {
+            white-space: nowrap;
         }
 
         .firma-link {
