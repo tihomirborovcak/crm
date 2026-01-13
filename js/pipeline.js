@@ -393,8 +393,8 @@ function renderKanban() {
     board.innerHTML = '';
     
     // Samo aktivne faze (bez Dobiveno/Izgubljeno ako su filtrirane)
-    const aktivneFaze = document.getElementById('filterAktivne').checked 
-        ? faze.filter(f => !f.is_won && !f.is_lost)
+    const aktivneFaze = document.getElementById('filterAktivne').checked
+        ? faze.filter(f => f.is_won == 0 && f.is_lost == 0)
         : faze;
     
     aktivneFaze.forEach(faza => {

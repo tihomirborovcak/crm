@@ -24,3 +24,12 @@ logs/
 *.tmp
 *.bak
 *.swp
+
+# SQL exports
+*.sql
+
+# Server config
+config_server.php
+
+# Archives
+*.zip
