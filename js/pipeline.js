@@ -546,7 +546,7 @@ async function handleDrop(e, novaFazaId) {
     const faza = faze.find(f => f.id == novaFazaId);
     
     // Ako je faza "Izgubljeno", pitaj za razlog
-    if (faza && faza.is_lost) {
+    if (faza && faza.is_lost == 1) {
         const razlog = prompt('Razlog gubitka:');
         if (razlog === null) return; // Canceled
         
@@ -638,7 +638,7 @@ function openEditPrilikaModal(id) {
     
     // Provjeri je li faza Izgubljeno
     const faza = faze.find(f => f.id == prilika.faza_id);
-    if (faza && faza.is_lost) {
+    if (faza && faza.is_lost == 1) {
         document.getElementById('lossReasonGroup').style.display = 'block';
         document.getElementById('prilikaRazlogGubitka').value = prilika.razlog_gubitka || '';
         document.getElementById('prilikaKonkurent').value = prilika.konkurent || '';
@@ -657,8 +657,8 @@ function closeModal(modalId) {
 // Show/hide loss reason based on faza
 document.getElementById('prilikaFaza')?.addEventListener('change', function() {
     const faza = faze.find(f => f.id == this.value);
-    document.getElementById('lossReasonGroup').style.display = 
-        (faza && faza.is_lost) ? 'block' : 'none';
+    document.getElementById('lossReasonGroup').style.display =
+        (faza && faza.is_lost == 1) ? 'block' : 'none';
 });
 
 async function savePrilika() {
